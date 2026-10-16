@@ -1,0 +1,52 @@
+{
+  "fixture_id": "smoke-node",
+  "language": "node",
+  "expect_profile": "generic-node",
+  "auto_detect_must_be_unambiguous": true,
+  "planted": [
+    {
+      "signal": "deep.silent.empty_catch",
+      "path": "src/service.ts",
+      "anchor": "service.parsePayload",
+      "note": "catch (e) {} 空 catch 静默吞掉 JSON.parse 异常，无注释，应报 P2"
+    },
+    {
+      "signal": "deep.dep.cycle",
+      "path": "src/util_b.ts",
+      "anchor": "service->util_a->util_b->service",
+      "note": "service -> util_a -> util_b -> service 三节点模块级 import 环（P2）；path 为闭合边（util_b->service）所在文件"
+    },
+    {
+      "signal": "deep.complexity.long_fn",
+      "path": "src/index.ts",
+      "anchor": "index.bootstrap",
+      "note": "49 行，超 40 行绝对下限；圈复杂度 <=10、嵌套 <=3"
+    }
+  ],
+  "forbidden": [
+    {
+      "signal": "deep.silent.empty_catch",
+      "path": "src/util_a.ts",
+      "anchor": "util_a.writeRecord",
+      "note": "有 console.error 的 catch 不算空 catch——已记录日志并 rethrow，不许误报"
+    },
+    {
+      "signal": "deep.deadcode.fn",
+      "path": "src/util_b.ts",
+      "anchor": "util_b.formatId",
+      "note": "被 export 且被 import 的函数——验证 ESM 导出函数不被误报为死代码（原技能只认 function 声明导致的著名误报）"
+    },
+    {
+      "signal": "deadcode.fn",
+      "path": "src/util_b.ts",
+      "anchor": "util_b.formatId",
+      "note": "客户端层导出函数引用判据同样不得误报（引用计数须含跨文件 import）"
+    },
+    {
+      "signal": "data.placeholder_hit",
+      "path": "app.db",
+      "anchor": "region_name",
+      "note": "notes.region_name 列值含「菲律宾波利略岛（Polillo）」——整词匹配回归：单字「略」不得命中（波利略岛事故根因）；remark 列无占位词，故本工程无 planted 数据层信号"
+    }
+  ]
+}

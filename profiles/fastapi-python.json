@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "id": "fastapi-python",
+  "display_name": "FastAPI + Vue3",
+  "detect": {
+    "priority": 0,
+    "any_files": [],
+    "all_files": [],
+    "content_markers": ["fastapi", "FastAPI(", "from fastapi import", "APIRouter(", "import fastapi"]
+  },
+  "roots": {
+    "runtime": "app",
+    "ignore_rules": [".gitignore"],
+    "db": "app.db",
+    "live_snapshot": "out/runtime_live.json"
+  },
+  "entry_files": ["index.js", "index.ts"],
+  "ownership": [
+    { "pattern": "app/**", "layer": "runtime" }
+  ],
+  "layers": [
+    { "id": "data", "order": 1, "display_name": "数据层", "enabled_by_default": true },
+    { "id": "api", "order": 2, "display_name": "接口层", "enabled_by_default": false, "skip_reason": "接口层需 --base 显式指定（契约禁止内置默认域名）" },
+    { "id": "runtime", "order": 3, "display_name": "运行时层", "enabled_by_default": true },
+    { "id": "schedule", "order": 4, "display_name": "调度层", "enabled_by_default": false, "skip_reason": "FastAPI 项目默认无调度层" },
+    { "id": "client", "order": 5, "display_name": "客户端层", "enabled_by_default": false, "skip_reason": "Vue 前端扫描需配置 roots.pages_dir / roots.routes_manifest（用 --override 启用）" },
+    { "id": "deep", "order": 6, "display_name": "深度层", "enabled_by_default": true }
+  ],
+  "signals": {
+    "placeholder_words": ["待查证", "待补充", "待实测", "敬请期待", "开发中"],
+    "sensitive_field_patterns": ["phone", "id_card", "idcard", "passport", "bank_card", "password", "secret", "token"],
+    "async_call_hints": ["httpx.", "aiohttp.", "requests."],
+    "key_consts": ["API_KEY", "SECRET_KEY", "APP_SECRET", "ACCESS_TOKEN", "PRIVATE_KEY"],
+    "timer_hints": [],
+    "domain_fields": []
+  },
+  "cron": { "fields": 5, "example": "分 时 日 月 周" },
+  "thresholds": {
+    "fn_lines": 40,
+    "max_nesting": 3,
+    "mccabe": 10,
+    "dup_min_lines": 12,
+    "dup_min_similarity": 0.85
+  },
+  "live_snapshot": {
+    "path": "out/runtime_live.json",
+    "fields": ["name", "runtime", "timeout", "memory", "modTime", "triggers", "envKeys"],
+    "note": "envKeys 只取变量名，不取值"
+  }
+}

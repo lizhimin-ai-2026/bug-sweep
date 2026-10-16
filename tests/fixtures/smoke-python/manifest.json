@@ -1,0 +1,58 @@
+{
+  "fixture_id": "smoke-python",
+  "language": "python",
+  "expect_profile": "generic-python",
+  "auto_detect_must_be_unambiguous": true,
+  "planted": [
+    {
+      "signal": "deep.silent.empty_catch",
+      "path": "app/svc_a.py",
+      "anchor": "svc_a.load_config",
+      "note": "except Exception: pass 静默吞错，无解释性注释，应报 P2"
+    },
+    {
+      "signal": "deep.dep.cycle",
+      "path": "app/svc_b.py",
+      "anchor": "svc_a->svc_b->svc_a",
+      "note": "svc_a 与 svc_b 模块级互相 import 的直接环（2 节点，P1）；path 为闭合边（svc_b->svc_a）所在文件"
+    },
+    {
+      "signal": "deep.complexity.long_fn",
+      "path": "app/handler.py",
+      "anchor": "handler.handle_batch",
+      "note": "46 行，超 40 行绝对下限；圈复杂度 <=10、嵌套 <=3，不触发其他复杂度信号"
+    },
+    {
+      "signal": "data.placeholder_hit",
+      "path": "app.db",
+      "anchor": "remark",
+      "note": "notes.remark 列值含三字整词占位词（整词匹配应命中；具体值见 app.db，为常见待办类中文词，刻意不在本 manifest 重复该词以免被当作项目内容扫描）"
+    }
+  ],
+  "forbidden": [
+    {
+      "signal": "data.placeholder_hit",
+      "path": "app.db",
+      "anchor": "region_name",
+      "note": "列值含「菲律宾波利略岛（Polillo）」——整词匹配回归：单字「略」不得命中（波利略岛事故根因）"
+    },
+    {
+      "signal": "data.placeholder_hit",
+      "path": "app/models.py",
+      "anchor": "REGION_NAMES",
+      "note": "源码常量含同一真实地名——源码层同样验证整词匹配不误报"
+    },
+    {
+      "signal": "deep.silent.empty_catch",
+      "path": "app/handler.py",
+      "anchor": "handler.telemetry",
+      "note": "埋点失败不阻断主流程的合法空 catch——except 块内带解释性注释，按契约应降 INFO，不进 P0-P2"
+    },
+    {
+      "signal": "deep.deadcode.fn",
+      "path": "tests/test_smoke.py",
+      "anchor": "test_smoke.test_handle_batch_stages_known_regions",
+      "note": "测试文件不得被误判为死代码（tests/ 跳过或 test_* 视为入口）"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "fixture_id": "smoke-go",
+  "language": "go",
+  "expect_profile": "generic-go",
+  "auto_detect_must_be_unambiguous": true,
+  "planted": [
+    {
+      "signal": "deep.silent.err_discard",
+      "path": "internal/handler/handler.go",
+      "anchor": "handler.Process",
+      "note": "_, _ = doThing(id) 显式丢弃 error 且无日志（Go 无 try/catch，静默区判据为 err 丢弃）"
+    },
+    {
+      "signal": "deep.dep.cycle",
+      "path": "internal/service/service.go",
+      "anchor": "depa->depb->service->depa",
+      "note": "service -> depa -> depb -> service 包级 import 环（3 节点，P2）；path 为闭合边（service->depa）所在文件"
+    },
+    {
+      "signal": "deep.complexity.long_fn",
+      "path": "internal/service/service.go",
+      "anchor": "service.RunBatch",
+      "note": "56 行，超 40 行绝对下限；圈复杂度 <=10、嵌套 <=3"
+    }
+  ],
+  "forbidden": [
+    {
+      "signal": "deep.silent.err_discard",
+      "path": "internal/handler/handler.go",
+      "anchor": "handler.ProcessLogged",
+      "note": "if err != nil { log.Printf(...); return err } 有日志的错误处理不许误报"
+    },
+    {
+      "signal": "data.placeholder_hit",
+      "path": "app.db",
+      "anchor": "region_name",
+      "note": "notes.region_name 列值含「菲律宾波利略岛（Polillo）」——整词匹配回归：单字「略」不得命中（波利略岛事故根因）；remark 列无占位词，故本工程无 planted 数据层信号"
+    }
+  ]
+}

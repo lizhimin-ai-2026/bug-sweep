@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smoke-python"
+version = "0.1.0"
+description = "Minimal sample project used by the bug-sweep smoke fixtures."
+requires-python = ">=3.9"
+
+[tool.setuptools]
+packages = ["app"]

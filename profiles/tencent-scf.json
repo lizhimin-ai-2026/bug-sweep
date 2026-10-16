@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "tencent-scf",
+  "display_name": "腾讯云 SCF（云函数）",
+  "detect": {
+    "priority": 0,
+    "any_files": ["serverless.yml", "scf_config.json"],
+    "all_files": [],
+    "content_markers": ["exports.main"]
+  },
+  "roots": {
+    "runtime": "src",
+    "ignore_rules": [".gitignore"],
+    "db": "app.db",
+    "live_snapshot": "out/runtime_live.json"
+  },
+  "entry_files": ["index.js", "index.ts"],
+  "ownership": [
+    { "pattern": "src/**", "layer": "runtime" }
+  ],
+  "layers": [
+    { "id": "data", "order": 1, "display_name": "数据层", "enabled_by_default": false, "skip_reason": "SCF 项目无本地数据库约定" },
+    { "id": "api", "order": 2, "display_name": "接口层", "enabled_by_default": false, "skip_reason": "接口层需 --base 显式指定（契约禁止内置默认域名）" },
+    { "id": "runtime", "order": 3, "display_name": "运行时层", "enabled_by_default": true },
+    { "id": "schedule", "order": 4, "display_name": "调度层", "enabled_by_default": true },
+    { "id": "client", "order": 5, "display_name": "客户端层", "enabled_by_default": false, "skip_reason": "无客户端层" },
+    { "id": "deep", "order": 6, "display_name": "深度层", "enabled_by_default": true }
+  ],
+  "signals": {
+    "placeholder_words": ["待查证", "待补充", "待实测", "敬请期待", "开发中"],
+    "sensitive_field_patterns": ["phone", "id_card", "idcard", "passport", "bank_card", "password", "secret", "token"],
+    "async_call_hints": ["cloud.invoke", "axios(", "fetch("],
+    "key_consts": ["API_KEY", "SECRET_KEY", "APP_SECRET", "ACCESS_TOKEN", "PRIVATE_KEY"],
+    "timer_hints": ["timer", "Type"],
+    "domain_fields": []
+  },
+  "cron": { "fields": 7, "example": "秒 分 时 日 月 周 年" },
+  "thresholds": {
+    "fn_lines": 40,
+    "max_nesting": 3,
+    "mccabe": 10,
+    "dup_min_lines": 12,
+    "dup_min_similarity": 0.85
+  },
+  "evidence": {
+    "schedule_log_values": {
+      "TRIGGER_TIMER": "腾讯云 SCF 侧触发器"
+    }
+  },
+  "live_snapshot": {
+    "path": "out/runtime_live.json",
+    "fields": ["name", "runtime", "timeout", "memory", "modTime", "triggers", "envKeys"],
+    "note": "envKeys 只取变量名，不取值"
+  }
+}

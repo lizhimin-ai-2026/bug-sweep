@@ -1,0 +1,13 @@
+# bug-sweep runtime requirements
+#
+# Zero third-party dependencies. Every script runs on the Python 3.11+
+# standard library only (argparse, ast, csv, difflib, hashlib, json, os, re,
+# sqlite3, stat, subprocess, sys, time, urllib.request).
+#
+# There is deliberately nothing to install. Do not add dependencies to this
+# file: the managed runtime has no PyYAML, and the zero-dependency rule is
+# what keeps the skill runnable everywhere (contract runtime matrix).
+#
+# Optional enhancement (NOT required, NOT used by any script): pyyaml - only
+# the external skill-lifecycle-toolkit validator prefers it, and falls back
+# to its bundled snapshot when absent.

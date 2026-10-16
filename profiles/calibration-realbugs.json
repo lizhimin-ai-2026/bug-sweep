@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "id": "calibration-realbugs",
+  "display_name": "真实修复记录校准",
+  "detect": { "priority": 0, "any_files": [], "all_files": [], "content_markers": [] },
+  "roots": {
+    "pages_dir": "pages",
+    "ignore_rules": [".gitignore"]
+  },
+  "entry_files": ["index.js"],
+  "ownership": [],
+  "layers": [
+    { "id": "client", "order": 5, "display_name": "客户端层", "enabled_by_default": true },
+    { "id": "deep", "order": 6, "display_name": "深度层", "enabled_by_default": true }
+  ],
+  "signals": {
+    "python_antipatterns": true,
+    "placeholder_words": ["待查证", "待补充", "待实测"],
+    "sensitive_field_patterns": ["phone", "id_card", "password", "secret", "token"],
+    "async_call_hints": ["aiohttp.", "httpx.AsyncClient", "asyncpg.", "motor."],
+    "key_consts": ["API_KEY", "SECRET_KEY", "APP_SECRET", "ACCESS_TOKEN", "PRIVATE_KEY"],
+    "timer_hints": [],
+    "domain_fields": []
+  },
+  "cron": { "fields": 5, "example": "分 时 日 月 周" },
+  "thresholds": {
+    "fn_lines": 40,
+    "max_nesting": 3,
+    "mccabe": 10,
+    "dup_min_lines": 12,
+    "dup_min_similarity": 0.85,
+    "dup_branch_min_lines": 4
+  }
+}

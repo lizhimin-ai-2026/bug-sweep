@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "wechat-miniprogram",
+  "display_name": "微信小程序（云开发 / 云托管）",
+  "detect": {
+    "priority": 30,
+    "any_files": ["project.config.json", "app.json"],
+    "all_files": ["app.json"],
+    "content_markers": ["wx.request", "App({", "Page({"]
+  },
+  "roots": {
+    "client": "miniprogram",
+    "runtime": "cloudfunctions",
+    "pages_dir": "pages",
+    "routes_manifest": "app.json",
+    "api_module": "utils/api.js",
+    "ignore_rules": [".gitignore", "project.config.json"],
+    "db": "app.db",
+    "live_snapshot": "out/runtime_live.json"
+  },
+  "entry_files": ["index.js", "index.wxml", "index.json", "index.wxss"],
+  "ownership": [
+    { "pattern": "cloudfunctions/**", "layer": "runtime" },
+    { "pattern": "miniprogram/**", "layer": "client" }
+  ],
+  "layers": [
+    { "id": "data", "order": 1, "display_name": "数据层", "enabled_by_default": true },
+    { "id": "api", "order": 2, "display_name": "接口层", "enabled_by_default": false, "skip_reason": "接口层需 --base 显式指定（契约禁止内置默认域名）" },
+    { "id": "runtime", "order": 3, "display_name": "运行时层", "enabled_by_default": true },
+    { "id": "schedule", "order": 4, "display_name": "调度层", "enabled_by_default": true },
+    { "id": "client", "order": 5, "display_name": "客户端层", "enabled_by_default": true },
+    { "id": "deep", "order": 6, "display_name": "深度层", "enabled_by_default": true }
+  ],
+  "signals": {
+    "placeholder_words": ["待查证", "待补充", "待实测", "敬请期待", "开发中"],
+    "sensitive_field_patterns": ["phone", "id_card", "idcard", "passport", "bank_card", "password", "secret", "token"],
+    "async_call_hints": ["wx.cloud.callFunction", "wx.request", "httpRequest("],
+    "key_consts": ["SYSTEM_PROMPT", "PLACEHOLDER_WORDS", "API_KEY", "SECRET_KEY", "APP_SECRET"],
+    "timer_hints": ["TriggerName", "event.Type"],
+    "domain_fields": []
+  },
+  "cron": { "fields": 7, "example": "秒 分 时 日 月 周 年" },
+  "thresholds": {
+    "fn_lines": 40,
+    "max_nesting": 3,
+    "mccabe": 10,
+    "dup_min_lines": 12,
+    "dup_min_similarity": 0.85
+  },
+  "evidence": {
+    "schedule_log_values": {
+      "TRIGGER_TIMER": "腾讯云 SCF 侧触发器",
+      "TCB_API": "微信云开发侧调度（列表天然看不到）",
+      "wx_trigger": "微信云开发侧调度"
+    }
+  },
+  "live_snapshot": {
+    "path": "out/runtime_live.json",
+    "fields": ["name", "runtime", "timeout", "memory", "modTime", "triggers", "envKeys"],
+    "note": "envKeys 只取变量名，不取值"
+  }
+}

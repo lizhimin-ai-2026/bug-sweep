@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "id": "generic-python",
+  "display_name": "通用 Python",
+  "detect": {
+    "priority": 0,
+    "any_files": ["pyproject.toml"],
+    "all_files": [],
+    "content_markers": []
+  },
+  "roots": {
+    "db": "app.db",
+    "ignore_rules": [".gitignore"]
+  },
+  "entry_files": ["index.js", "index.ts"],
+  "ownership": [],
+  "layers": [
+    { "id": "data", "order": 1, "display_name": "数据层", "enabled_by_default": true },
+    { "id": "api", "order": 2, "display_name": "接口层", "enabled_by_default": false, "skip_reason": "通用项目无接口契约基线（需要时传 --base 显式启用）" },
+    { "id": "runtime", "order": 3, "display_name": "运行时层", "enabled_by_default": false, "skip_reason": "通用项目无云端部署实况对拍" },
+    { "id": "schedule", "order": 4, "display_name": "调度层", "enabled_by_default": false, "skip_reason": "通用项目无调度声明对拍" },
+    { "id": "client", "order": 5, "display_name": "客户端层", "enabled_by_default": false, "skip_reason": "通用项目未配置客户端根（roots.client）" },
+    { "id": "deep", "order": 6, "display_name": "深度层", "enabled_by_default": true }
+  ],
+  "signals": {
+    "placeholder_words": ["待查证", "待补充", "待实测", "敬请期待", "开发中"],
+    "sensitive_field_patterns": ["phone", "id_card", "idcard", "passport", "bank_card", "password", "secret", "token"],
+    "async_call_hints": ["aiohttp.", "httpx.AsyncClient", "asyncpg.", "motor."],
+    "key_consts": ["API_KEY", "SECRET_KEY", "APP_SECRET", "ACCESS_TOKEN", "PRIVATE_KEY"],
+    "timer_hints": [],
+    "domain_fields": []
+  },
+  "cron": { "fields": 5, "example": "分 时 日 月 周" },
+  "thresholds": {
+    "fn_lines": 40,
+    "max_nesting": 3,
+    "mccabe": 10,
+    "dup_min_lines": 12,
+    "dup_min_similarity": 0.85
+  }
+}
